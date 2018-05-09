@@ -15,7 +15,7 @@ The script progresses by asking a few key questions:
 - Expected number of motifs
 - Chromosomal start location
 """
-
+import argparse
 import sys
 import json
 
@@ -34,13 +34,19 @@ def survey_var(s, cast=str, default=""):
 
 
 def main():
-    # Conduct survey
-    name = survey_var("Enter the locus name", default="HD")
-    repeat = survey_var("Sequence motif", default="CAG")
-    nrepeat = survey_var("Number of motifs in reference", cast=int, default=19)
-    location = survey_var("Chromosomal start location (1-based)",
-                           default="chr4:3074877")
-    ref = survey_var("Enter the FASTA path", default="/mnt/ref/hg38.upper.fa")
+    parser = argparse.ArgumentParser(__doc__)
+    parser.add_argument("--name", help="Locus Name", required=True, type=str)
+    parser.add_argument("--motif", help="Sequence Motif", required=True, type=str)
+    parser.add_argument("--nummotifs", help="Number of motifs in reference", required=True, type=str)
+    parser.add_argument("--startposition", help="Chromosomal start location (1-based)", required=True, type=str)
+    parser.add_argument("--fasta", help="Fasta path", required=True, type=str)
+    args = parser.parse_args()
+
+    name = args.name
+    repeat = args.motif
+    nrepeat = int(args.nummotifs)
+    location = args.startposition
+    ref = args.fasta
 
     # Extract sequences
     f = Fasta(ref)
