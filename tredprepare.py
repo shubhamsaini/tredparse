@@ -2,13 +2,16 @@
 # -*- coding: UTF-8 -*-
 
 """
-Copyright (c) 2015-2017 Human Longevity Inc.
+Example command to generate commands!! :D
+cat large_loci.txt | awk '{print "python tredprepare.py --name "$1"_"$2" --motif "$5" --nummotifs "$4" --startposition "$1":"$2" --fasta ../fasta/human_g1k_v37.fasta"}'
 
+"""
+
+"""
+Copyright (c) 2015-2017 Human Longevity Inc.
 Author: Haibao Tang <htang@humanlongevity.com>
 License: Non-Commercial Use Only. For details, see `LICENSE` file
-
 Prepare details of a STR locus for computation with TREDPARSE.
-
 The script progresses by asking a few key questions:
 - Locus name
 - Motif
@@ -80,6 +83,15 @@ def main():
     print >> sys.stderr
     print >> sys.stderr, "Template json file is written to `{}`".format(outfile)
     print >> sys.stderr, "Please manually fill in the remaining details"
+    
+    with open("sites/"+name+".json", "r+") as f:
+        data = json.load(f)
+        data[data.keys()[0]]['inheritance'] = "AD"
+        data[data.keys()[0]]['motif'] = repeat
+        data[data.keys()[0]]['repeat'] = repeat
+        data[data.keys()[0]]['repeat_location.hg19'] = data[data.keys()[0]]['repeat_location']
+    with open("sites/"+name+".json", 'w') as f:
+        json.dump(data, f, indent=4)
 
 
 if __name__ == '__main__':
